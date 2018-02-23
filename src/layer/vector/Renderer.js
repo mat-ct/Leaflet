@@ -59,11 +59,13 @@ export var Renderer = Layer.extend({
 		this.getPane().appendChild(this._container);
 		this._update();
 		this.on('update', this._updatePaths, this);
+		this._map.on('rotate', this._update, this);
 	},
 
 	onRemove: function () {
 		this.off('update', this._updatePaths, this);
 		this._destroyContainer();
+		this._map.off('rotate', this._update, this);
 	},
 
 	getEvents: function () {

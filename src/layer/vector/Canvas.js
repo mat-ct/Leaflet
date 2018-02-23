@@ -55,6 +55,9 @@ export var Canvas = Renderer.extend({
 		// Redraw vectors since canvas is cleared upon removal,
 		// in case of removing the renderer itself from the map.
 		this._draw();
+
+		// When rotating the canvas itself, it is cleared by some weird reason, so redraw.
+		map.on('rotate', this._redraw, this);
 	},
 
 	_initContainer: function () {
@@ -73,6 +76,7 @@ export var Canvas = Renderer.extend({
 		DomUtil.remove(this._container);
 		DomEvent.off(this._container);
 		delete this._container;
+		this._map.off('rotate', this._redraw, this);
 	},
 
 	_updatePaths: function () {
