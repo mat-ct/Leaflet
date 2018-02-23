@@ -1,3 +1,10 @@
+import {Layer} from '../Layer';
+import {IconDefault} from './Icon.Default';
+import * as Util from '../../core/Util';
+import {toLatLng as latLng} from '../../geo/LatLng';
+import * as DomUtil from '../../dom/DomUtil';
+import {MarkerDrag} from './Marker.Drag';
+
 /*
  * @class Marker
  * @inherits Interactive layer
@@ -11,14 +18,16 @@
  * ```
  */
 
-L.Marker = L.Layer.extend({
+export var Marker = Layer.extend({
 
 	// @section
 	// @aka Marker options
 	options: {
 		// @option icon: Icon = *
-		// Icon class to use for rendering the marker. See [Icon documentation](#L.Icon) for details on how to customize the marker icon. If not specified, a new `L.Icon.Default` is used.
-		icon: new L.Icon.Default(),
+		// Icon instance to use for rendering the marker.
+		// See [Icon documentation](#L.Icon) for details on how to customize the marker icon.
+		// If not specified, a common instance of `L.Icon.Default` is used.
+		icon: new IconDefault(),
 
 		// Option inherited from "Interactive layer" abstract class
 		interactive: true,
@@ -26,6 +35,18 @@ L.Marker = L.Layer.extend({
 		// @option draggable: Boolean = false
 		// Whether the marker is draggable with mouse/touch or not.
 		draggable: false,
+
+		// @option autoPan: Boolean = false
+		// Set it to `true` if you want the map to do panning animation when marker hits the edges.
+		autoPan: false,
+
+		// @option autoPanPadding: Point = Point(50, 50)
+		// Equivalent of setting both top left and bottom right autopan padding to the same value.
+		autoPanPadding: [50, 50],
+
+		// @option autoPanSpeed: Number = 10
+		// Number of pixels the map should move by.
+		autoPanSpeed: 10,
 
 		// @option keyboard: Boolean = true
 		// Whether the marker can be tabbed to with a keyboard and clicked by pressing enter.
@@ -59,8 +80,10 @@ L.Marker = L.Layer.extend({
 		// `Map pane` where the markers icon will be added.
 		pane: 'markerPane',
 
-		// FIXME: shadowPane is no longer a valid option
-		nonBubblingEvents: ['click', 'dblclick', 'mouseover', 'mouseout', 'contextmenu']
+		// @option bubblingMouseEvents: Boolean = false
+		// When `true`, a mouse event on this marker will trigger the same event on the map
+		// (unless [`L.DomEvent.stopPropagation`](#domevent-stoppropagation) is used).
+		bubblingMouseEvents: false
 	},
 
 	/* @section
@@ -69,8 +92,8 @@ L.Marker = L.Layer.extend({
 	 */
 
 	initialize: function (latlng, options) {
-		L.setOptions(this, options);
-		this._latlng = L.latLng(latlng);
+		Util.setOptions(this, options);
+		this._latlng = latLng(latlng);
 	},
 
 	onAdd: function (map) {
@@ -90,6 +113,7 @@ L.Marker = L.Layer.extend({
 			this.options.draggable = true;
 			this.dragging.removeHooks();
 		}
+		delete this.dragging;
 
 		if (this._zoomAnimated) {
 			map.off('zoomanim', this._animateZoom, this);
@@ -116,7 +140,7 @@ L.Marker = L.Layer.extend({
 	// Changes the marker position to the given point.
 	setLatLng: function (latlng) {
 		var oldLatLng = this._latlng;
-		this._latlng = L.latLng(latlng);
+		this._latlng = latLng(latlng);
 		this.update();
 
 		// @event move: Event
@@ -155,7 +179,7 @@ L.Marker = L.Layer.extend({
 
 	update: function () {
 
-		if (this._icon) {
+		if (this._icon && this._map) {
 			var pos = this._map.latLngToLayerPoint(this._latlng).round();
 			this._setPos(pos);
 		}
@@ -180,12 +204,13 @@ L.Marker = L.Layer.extend({
 			if (options.title) {
 				icon.title = options.title;
 			}
-			if (options.alt) {
-				icon.alt = options.alt;
+
+			if (icon.tagName === 'IMG') {
+				icon.alt = options.alt || '';
 			}
 		}
 
-		L.DomUtil.addClass(icon, classToAdd);
+		DomUtil.addClass(icon, classToAdd);
 
 		if (options.keyboard) {
 			icon.tabIndex = '0';
@@ -209,7 +234,8 @@ L.Marker = L.Layer.extend({
 		}
 
 		if (newShadow) {
-			L.DomUtil.addClass(newShadow, classToAdd);
+			DomUtil.addClass(newShadow, classToAdd);
+			newShadow.alt = '';
 		}
 		this._shadow = newShadow;
 
@@ -236,7 +262,7 @@ L.Marker = L.Layer.extend({
 			});
 		}
 
-		L.DomUtil.remove(this._icon);
+		DomUtil.remove(this._icon);
 		this.removeInteractiveTarget(this._icon);
 
 		this._icon = null;
@@ -244,7 +270,7 @@ L.Marker = L.Layer.extend({
 
 	_removeShadow: function () {
 		if (this._shadow) {
-			L.DomUtil.remove(this._shadow);
+			DomUtil.remove(this._shadow);
 		}
 		this._shadow = null;
 	},
@@ -252,14 +278,13 @@ L.Marker = L.Layer.extend({
 	_setPos: function (pos) {
 		if (this._map._rotate) {
 			var anchor = this.options.icon.options.iconAnchor || new L.Point(0, 0);
-			L.DomUtil.setPosition(this._icon, pos, -this._map._bearing || 0, pos.add(anchor));
+			DomUtil.setPosition(this._icon, pos, -this._map._bearing || 0, pos.add(anchor));
 		} else {
-			L.DomUtil.setPosition(this._icon, pos);
+			DomUtil.setPosition(this._icon, pos);
 		}
 
-
 		if (this._shadow) {
-			L.DomUtil.setPosition(this._shadow, pos);
+			DomUtil.setPosition(this._shadow, pos);
 		}
 
 		this._zIndex = pos.y + this.options.zIndexOffset;
@@ -281,18 +306,18 @@ L.Marker = L.Layer.extend({
 
 		if (!this.options.interactive) { return; }
 
-		L.DomUtil.addClass(this._icon, 'leaflet-interactive');
+		DomUtil.addClass(this._icon, 'leaflet-interactive');
 
 		this.addInteractiveTarget(this._icon);
 
-		if (L.Handler.MarkerDrag) {
+		if (MarkerDrag) {
 			var draggable = this.options.draggable;
 			if (this.dragging) {
 				draggable = this.dragging.enabled();
 				this.dragging.disable();
 			}
 
-			this.dragging = new L.Handler.MarkerDrag(this);
+			this.dragging = new MarkerDrag(this);
 
 			if (draggable) {
 				this.dragging.enable();
@@ -314,10 +339,10 @@ L.Marker = L.Layer.extend({
 	_updateOpacity: function () {
 		var opacity = this.options.opacity;
 
-		L.DomUtil.setOpacity(this._icon, opacity);
+		DomUtil.setOpacity(this._icon, opacity);
 
 		if (this._shadow) {
-			L.DomUtil.setOpacity(this._shadow, opacity);
+			DomUtil.setOpacity(this._shadow, opacity);
 		}
 	},
 
@@ -327,6 +352,14 @@ L.Marker = L.Layer.extend({
 
 	_resetZIndex: function () {
 		this._updateZIndex(0);
+	},
+
+	_getPopupAnchor: function () {
+		return this.options.icon.options.popupAnchor;
+	},
+
+	_getTooltipAnchor: function () {
+		return this.options.icon.options.tooltipAnchor;
 	}
 });
 
@@ -335,6 +368,6 @@ L.Marker = L.Layer.extend({
 
 // @factory L.marker(latlng: LatLng, options? : Marker options)
 // Instantiates a Marker object given a geographical point and optionally an options object.
-L.marker = function (latlng, options) {
-	return new L.Marker(latlng, options);
-};
+export function marker(latlng, options) {
+	return new Marker(latlng, options);
+}
