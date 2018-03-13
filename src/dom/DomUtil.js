@@ -233,7 +233,7 @@ export function setPosition(el, point, bearing, pivot) {
 	/* eslint-enable */
 
 	if (Browser.any3d) {
-		setTransform(el, point,, undefined, bearing, pivot);
+		setTransform(el, point, undefined, bearing, pivot);
 	} else {
 		el.style.left = point.x + 'px';
 		el.style.top = point.y + 'px';
