@@ -9,7 +9,7 @@
 
 	<link rel="stylesheet" href="../css/screen.css" />
 
-	<script src="../leaflet-include.js"></script>
+	<script src="../../dist/leaflet-src.js"></script>
 </head>
 <body>
 
@@ -27,7 +27,7 @@
         }).addLayer(osm);
 
         map.setView([50.5, 30.51], 15)
-        map.setBearing(45);
+        
 
 		var markers = new L.FeatureGroup();
 
@@ -44,15 +44,12 @@
 		}
 
 		function populate() {
-			for (var i = 0; i < 10; i++) {
-				L.marker(getRandomLatLng(map.getBounds())).addTo(markers);
-			}
-			return false;
+			map.setBearing(90);
+			console.log("Rotated")
 		}
 
 		markers.bindPopup("<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.</p><p>Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque.</p>").addTo(map);
 
-		populate();
 		L.DomUtil.get('populate').onclick = populate;
 
 		function logEvent(e) { console.log(e.type); }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8"/>
 	<title>Leaflet debug page</title>
 
 	<link rel="stylesheet" href="../../dist/leaflet.css" />
@@ -9,8 +10,7 @@
 
 	<link rel="stylesheet" href="../css/screen.css" />
 
-	<script type="text/javascript" src="../../build/deps.js"></script>
-	<script src="../leaflet-include.js"></script>
+	<script src="../../dist/leaflet-src.js"></script>
 	<script src="../vector/route.js"></script>
 
 	<style>
@@ -79,7 +79,7 @@
 <body>
 
 
-	<div id="map" style="height: 500px;>
+	<div id="map" style="height: 500px;">
 		<div class="crosshair c1"></div>
 <!-- 		<div class="crosshair c2"></div> -->
 	</div>
@@ -111,132 +111,39 @@
 
 	<input type="range" min="0" max="360" step="1" name="rho" id='rho_input' /><span id='rho'></span>
 
-
-
-	<div>
-		<button onclick="map.flyTo(trd, 10);" >flyTo TRD</button>
-		<button onclick="map.flyTo(kyiv, 10);">flyTo Kiev</button>
-		<button onclick="map.flyTo(sf, 10);">flyTo SF</button>
-	</div>
-
-
 	<script type="text/javascript">
 
-		var kyiv = [50.5, 30.5],
-			lnd = [51.51, -0.12],
-			sf = [37.77, -122.42],
-			dc = [38.91, -77.04],
-			trd = [63.41, 10.41];
-
-
-		var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-			osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+		var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+			osmAttrib = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 			osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib});
 
+		var map = L.map('map', {
+            rotate: true,
+        }).addLayer(osm);
+        map.setBearing(-20);
 
-		for (var i = 0, latlngs = [], len = route.length; i < len; i++) {
-			latlngs.push(new L.LatLng(route[i][0], route[i][1]));
-		}
-		var path = new L.Polyline(latlngs, {
-			renderer: L.canvas()
-		});
+        map.setView([50.5, 30.51], 15)
+        
 
+		var markers = new L.FeatureGroup();
 
-		var map = L.map('map', {rotate: true})
-				.setView([55, 10], 2)
-				.addLayer(osm)
-				.addLayer(path);
+		function getRandomLatLng(llbounds) {
+			var s = llbounds.getSouth(),
+			    n = llbounds.getNorth(),
+			    w = llbounds.getWest(),
+			    e = llbounds.getEast();
 
-		var marker1 = L.marker(kyiv).addTo(map),
-			marker2 = L.marker(lnd).addTo(map);
-			marker3 = L.marker(dc).addTo(map),
-			marker4 = L.marker(sf).addTo(map),
-			marker5 = L.marker(trd).addTo(map);
-
-		var loremIpsum = "<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.</p><p>Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque.</p>";
-
-		marker1.bindPopup(loremIpsum + '<p>Kyiv</p>').addTo(map);
-		marker2.bindPopup(loremIpsum + '<p>Lnd</p>').addTo(map);
-		marker3.bindPopup(loremIpsum + '<p>DC</p>').addTo(map);
-		marker4.bindPopup(loremIpsum + '<p>DF</p>').addTo(map);
-		marker5.bindPopup(loremIpsum + '<p>Trd</p>').addTo(map);
-
-
-		function logEvent(e) { console.log(e, e.type); }
-
-		function logMouse(ev) {
-			document.getElementById('llx').innerHTML = ev.latlng.lng;
-			document.getElementById('lly').innerHTML = ev.latlng.lat;
-			document.getElementById('lyx').innerHTML = ev.layerPoint.x;
-			document.getElementById('lyy').innerHTML = ev.layerPoint.y;
-			document.getElementById('cnx').innerHTML = ev.containerPoint.x;
-			document.getElementById('cny').innerHTML = ev.containerPoint.y;
+			return L.latLng(
+				s + (Math.random() * (n - s)),
+				w + (Math.random() * (e - w))
+			)
 		}
 
-		function rotate(ev) {
-			if (ev.buttons === 0) return;
-			var angle = ev.target.valueAsNumber;
-// 			console.log(angle);
+		L.DomUtil.get('rho_input').oninput = function(e){
+			console.log(e.target.value);
 			map.setBearing(angle);
-		}
-
-
-		map.on('move rotate zoomend', function(ev) {
-			var panePos = this._getMapPanePos();
-			document.getElementById('pox').innerHTML = panePos.x;
-			document.getElementById('poy').innerHTML = panePos.y;
-
-		});
-
-
-		var pixelOrigin = L.DomUtil.create('div', 'pixelorigin', map._rotatePane);
-		function updatePixelOrigin(ev) {
-			document.getElementById('ogx').innerHTML = map._pixelOrigin.x;
-			document.getElementById('ogy').innerHTML = map._pixelOrigin.y;
-			pixelOrigin.style.left = ( - map._pixelOrigin.x -1 ) + 'px';
-			pixelOrigin.style.top  = ( - map._pixelOrigin.y -1 ) + 'px';
 		};
-		map.on('rotate zoomend load', updatePixelOrigin);
-		updatePixelOrigin();
-
-		document.getElementById('rho_input').addEventListener('change', rotate);
-		document.getElementById('rho_input').addEventListener('mousemove', rotate);
-
-
-		function rotateOneDegree() {
-			var angle = document.getElementById('rho_input').valueAsNumber++;
-			if (document.getElementById('rho_input').valueAsNumber >= 360) {
-				document.getElementById('rho_input').valueAsNumber = 0;
-			}
-			map.setBearing(angle);
-		}
-
-
-		var pivotDot = L.DomUtil.create('div', 'pivot', map._mapPane);
-		L.DomUtil.create('div', 'panebounds rotate', map._rotatePane);
-		L.DomUtil.create('div', 'panebounds main', map._mapPane);
-
-		map.on('rotate', function(ev) {
-			document.getElementById('pvx').innerHTML = map._pivot.x;
-			document.getElementById('pvy').innerHTML = map._pivot.y;
-			pivotDot.style.left = ( map._pivot.x -1 ) + 'px';
-			pivotDot.style.top  = ( map._pivot.y -1 ) + 'px';
-		});
-
-
-
-// 		window.setInterval(rotateOneDegree, 500);
-
-
-		map.on('mousemove', logMouse);
-		// map.on('click', logEvent);
-
-		// map.on('movestart', logEvent);
-		// 		map.on('move', logEvent);
-		// map.on('moveend', logEvent);
-
-		// map.on('zoomstart', logEvent);
-		// map.on('zoomend', logEvent);
+		
 
 	</script>
 </body>
