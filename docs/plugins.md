@@ -1055,6 +1055,15 @@ These plugins provide new markers or news ways of converting abstract data into 
 <table class="plugins"><tr><th>Plugin</th><th>Description</th><th>Maintainer</th></tr>
 	<tr>
 		<td>
+			<a href="https://github.com/zhuang-hao-ming/Leaflet.RoughCanvas">Leaflet.RoughCanvas</a>
+		</td><td>
+			Leaflet.RoughCanvas renders hand-drawn, sketch style vector map(polyline, polygon, geojson).
+		</td><td>
+			<a href="https://github.com/zhuang-hao-ming/">haoming</a>
+		</td>
+	</tr>
+	<tr>
+		<td>
 			<a href="https://github.com/jdfergason/Leaflet.Ellipse">Leaflet.ellipse</a>
 		</td><td>
 			Leaflet.ellipse place ellipses on map by specifying center point, semi-major axis,
@@ -1972,7 +1981,7 @@ Allows users to create, draw, edit and/or delete points, lines and polygons.
 		<td>
 			<a href="https://github.com/codeofsumit/leaflet.pm">Leaflet.PM</a>
 		</td><td>
-			Geometry Management for Leaflet 1.0. Draw, Edit, Cut, Drag and Snap Markers, Circles, Polylines, Polygons, LayerGroups and geoJSON. Supports holes in polygons, snapping and more. (<a href="https://leafletpm.now.sh">Demo</a>)
+			Geometry Management for Leaflet 1.0 and higher. Draw, Edit, Cut, Drag and Snap Markers, Circles, Polylines, Polygons, LayerGroups and geoJSON. Supports holes in polygons, snapping, canvas mode and more. (<a href="https://leafletpm.now.sh">Demo</a>)
 		</td><td>
 			<a href="https://github.com/codeofsumit">Sumit Kumar</a>
 		</td>
@@ -2388,6 +2397,17 @@ These plugins help users select either overlays or areas in the map.
 			Selecting feature layers on a map by drawing an area.
 		</td><td>
 			<a href="http://pezzo.org">Sandro Pibia</a>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a href="https://github.com/mkong0216/leaflet-shades/"> Leaflet-Shades </a>
+		</td>
+		<td>
+			A draggable and resizable rectangle for selecting an area on a map and creating a gray overlay in unselected areas (<a href="https://mkong0216.github.io/leaflet-shades/examples">Demo</a>)
+		</td>
+		<td>
+			<a href="https://github.com/mkong0216"> Mandy Kong </a>
 		</td>
 	</tr>
 </table>
@@ -3093,6 +3113,16 @@ Show the geographical coordinates under the mouse cursor in different ways.
 These plugins extend Leaflet event handling.
 
 <table class="plugins"><tr><th>Plugin</th><th>Description</th><th>Maintainer</th></tr>
+	<tr>
+		<td>
+			<a href="https://github.com/elmarquis/Leaflet.GestureHandling/">Leaflet.GestureHandling</a>
+		</td><td>
+		Brings the basic functionality of Google Maps Gesture Handling into Leaflet. Prevents users from getting trapped on the map when scrolling a long page.
+			<a href="https://elmarquis.github.io/Leaflet.GestureHandling/examples/"> Demo</a>
+		</td><td>
+			<a href="https://github.com/elmarquis">Andy Marquis</a>
+		</td>
+	</tr>
 	<tr>
 		<td>
 			<a href="https://github.com/CliffCloud/Leaflet.Sleep">L.Sleep</a>
