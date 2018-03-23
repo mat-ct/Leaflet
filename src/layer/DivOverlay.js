@@ -57,6 +57,7 @@ export var DivOverlay = Layer.extend({
 		}
 
 		this.bringToFront();
+		map.on('rotate', this.update, this);
 	},
 
 	onRemove: function (map) {
@@ -183,17 +184,24 @@ export var DivOverlay = Layer.extend({
 		    anchor = this._getAnchor();
 
 		if (this._zoomAnimated) {
-			DomUtil.setPosition(this._container, pos.add(anchor));
+			if (this._map._rotate) {
+				DomUtil.setPosition(this._container, pos.add(anchor), -this._map._bearing);
+			} else {
+				DomUtil.setPosition(this._container, pos.add(anchor));
+			}
 		} else {
 			offset = offset.add(pos).add(anchor);
 		}
 
-		var bottom = this._containerBottom = -offset.y,
-		    left = this._containerLeft = -Math.round(this._containerWidth / 2) + offset.x;
+        this._container.style.transformOrigin = '50% 100%';
 
-		// bottom position the popup in case the height of the popup changes (images loading etc)
-		this._container.style.bottom = bottom + 'px';
-		this._container.style.left = left + 'px';
+        var bottom = this._containerBottom = -offset.y,
+            left = this._containerLeft = -Math.round(this._containerWidth / 2) + offset.x;
+
+        // bottom position the popup in case the height of the popup changes (images loading etc)
+        this._container.style.bottom = bottom + 'px';
+        this._container.style.left = left + 'px';
+
 	},
 
 	_getAnchor: function () {

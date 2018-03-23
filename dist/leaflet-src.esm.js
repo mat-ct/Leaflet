@@ -1,9 +1,9 @@
 /* @preserve
- * Leaflet 1.3.1+master.f931e5a, a JS library for interactive maps. http://leafletjs.com
+ * Leaflet 1.3.1+master.0c8471a, a JS library for interactive maps. http://leafletjs.com
  * (c) 2010-2018 Vladimir Agafonkin, (c) 2010-2011 CloudMade
  */
 
-var version = "1.3.1+master.f931e5a0";
+var version = "1.3.1+master.0c8471a1";
 
 /*
  * @namespace Util
@@ -9409,6 +9409,7 @@ var DivOverlay = Layer.extend({
 		}
 
 		this.bringToFront();
+		map.on('rotate', this.update, this);
 	},
 
 	onRemove: function (map) {
@@ -9535,17 +9536,25 @@ var DivOverlay = Layer.extend({
 		    anchor = this._getAnchor();
 
 		if (this._zoomAnimated) {
-			setPosition(this._container, pos.add(anchor));
+			if (this._map._rotate) {
+				// var anchor = this.options.icon.options.iconAnchor || new L.Point(0, 0);
+				setPosition(this._container, pos.add(anchor), -this._map._bearing);
+			} else {
+				setPosition(this._container, pos.add(anchor));
+			}
 		} else {
 			offset = offset.add(pos).add(anchor);
 		}
 
-		var bottom = this._containerBottom = -offset.y,
-		    left = this._containerLeft = -Math.round(this._containerWidth / 2) + offset.x;
+        this._container.style.transformOrigin = '50% 100%';
 
-		// bottom position the popup in case the height of the popup changes (images loading etc)
-		this._container.style.bottom = bottom + 'px';
-		this._container.style.left = left + 'px';
+        var bottom = this._containerBottom = -offset.y,
+            left = this._containerLeft = -Math.round(this._containerWidth / 2) + offset.x;
+
+        // bottom position the popup in case the height of the popup changes (images loading etc)
+        this._container.style.bottom = bottom + 'px';
+        this._container.style.left = left + 'px';
+
 	},
 
 	_getAnchor: function () {
