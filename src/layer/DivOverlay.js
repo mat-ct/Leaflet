@@ -193,8 +193,6 @@ export var DivOverlay = Layer.extend({
 			offset = offset.add(pos).add(anchor);
 		}
 
-        this._container.style.transformOrigin = '50% 100%';
-
         var bottom = this._containerBottom = -offset.y,
             left = this._containerLeft = -Math.round(this._containerWidth / 2) + offset.x;
 

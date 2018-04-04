@@ -1,5 +1,5 @@
 /* @preserve
- * Leaflet 1.3.1+master.0c8471a, a JS library for interactive maps. http://leafletjs.com
+ * Leaflet 1.3.1+master.353f5fc, a JS library for interactive maps. http://leafletjs.com
  * (c) 2010-2018 Vladimir Agafonkin, (c) 2010-2011 CloudMade
  */
 
@@ -9,7 +9,7 @@
 	(factory((global.L = {})));
 }(this, (function (exports) { 'use strict';
 
-var version = "1.3.1+master.0c8471a1";
+var version = "1.3.1+master.353f5fc7";
 
 /*
  * @namespace Util
@@ -2443,6 +2443,8 @@ function setTransform(el, offset, scale, bearing, pivot) {
 				(scale ? ' scale(' + scale + ')' : '') +
 				' rotate(' + bearing + 'rad)';
 	}
+
+    el.style.transformOrigin = '50% 100%';
 }
 
 // @function setPosition(el: HTMLElement, position: Point)
@@ -7671,6 +7673,7 @@ var Marker = Layer.extend({
 	_setPos: function (pos) {
 		if (this._map._rotate) {
 			var anchor = this.options.icon.options.iconAnchor || new L.Point(0, 0);
+			console.log(anchor);
 			setPosition(this._icon, pos, -this._map._bearing || 0, pos.add(anchor));
 		} else {
 			setPosition(this._icon, pos);
@@ -9543,7 +9546,6 @@ var DivOverlay = Layer.extend({
 
 		if (this._zoomAnimated) {
 			if (this._map._rotate) {
-				// var anchor = this.options.icon.options.iconAnchor || new L.Point(0, 0);
 				setPosition(this._container, pos.add(anchor), -this._map._bearing);
 			} else {
 				setPosition(this._container, pos.add(anchor));
@@ -9551,8 +9553,6 @@ var DivOverlay = Layer.extend({
 		} else {
 			offset = offset.add(pos).add(anchor);
 		}
-
-        this._container.style.transformOrigin = '50% 100%';
 
         var bottom = this._containerBottom = -offset.y,
             left = this._containerLeft = -Math.round(this._containerWidth / 2) + offset.x;

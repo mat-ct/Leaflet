@@ -220,6 +220,8 @@ export function setTransform(el, offset, scale, bearing, pivot) {
 				(scale ? ' scale(' + scale + ')' : '') +
 				' rotate(' + bearing + 'rad)';
 	}
+
+    el.style.transformOrigin = '50% 100%';
 }
 
 // @function setPosition(el: HTMLElement, position: Point)
