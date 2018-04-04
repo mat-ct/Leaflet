@@ -1,5 +1,5 @@
 /* @preserve
- * Leaflet 1.3.1+master.353f5fc, a JS library for interactive maps. http://leafletjs.com
+ * Leaflet 1.3.1+master.52bc466, a JS library for interactive maps. http://leafletjs.com
  * (c) 2010-2018 Vladimir Agafonkin, (c) 2010-2011 CloudMade
  */
 
@@ -9,7 +9,7 @@
 	(factory((global.L = {})));
 }(this, (function (exports) { 'use strict';
 
-var version = "1.3.1+master.353f5fc7";
+var version = "1.3.1+master.52bc4665";
 
 /*
  * @namespace Util
@@ -7673,7 +7673,6 @@ var Marker = Layer.extend({
 	_setPos: function (pos) {
 		if (this._map._rotate) {
 			var anchor = this.options.icon.options.iconAnchor || new L.Point(0, 0);
-			console.log(anchor);
 			setPosition(this._icon, pos, -this._map._bearing || 0, pos.add(anchor));
 		} else {
 			setPosition(this._icon, pos);
