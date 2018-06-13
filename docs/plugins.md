@@ -221,6 +221,16 @@ Ready-to-go basemaps, with little or no configuration at all.
         	<a href="https://github.com/MIERUNE">Mierune</a>
         </td>
     </tr>
+	<tr>
+		<td>
+			<a href="https://github.com/rzoller/Leaflet.TileLayer.Swiss">Leaflet.TileLayer.Swiss</a>
+		</td><td>
+			Displays national maps of Switzerland using WMTS services of swisstopo.
+			<a href="https://rzoller.ch/Leaflet.TileLayer.Swiss/examples/basic.html">Demo</a>.
+		</td><td>
+			<a href="https://github.com/rzoller">Roman Zoller</a>
+		</td>
+	</tr>
 </table>
 
 
@@ -484,6 +494,15 @@ The following plugins change the way that tile or image layers are displayed in 
 			Enable users to <a href="https://publiclab.github.io/Leaflet.DistortableImage/examples/">scale, rotate, and distort images</a> on Leaflet maps.
 		</td><td>
 			<a href="https://github.com/publiclab">Public Lab</a>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a href="https://github.com/ronikar/Leaflet.DistortableVideo">Leaflet.DistortableVideo</a>
+		</td><td>
+			Enable users to scale, rotate, and distort videos on Leaflet maps.  (<a href='https://ronikar.github.io/Leaflet.DistortableVideo/examples/'>demo</a>).
+		</td><td>
+			<a href="https://github.com/ronikar">Roni Karilkar</a>
 		</td>
 	</tr>
 	<tr>
@@ -2153,13 +2172,22 @@ Allows users to create, draw, edit and/or delete points, lines and polygons.
 			<a href="https://github.com/manleyjster">Justin Manley</a>
 		</td>
 	</tr>
-<tr>
+        <tr>
 		<td>
 			<a href="https://github.com/kklimczak/Leaflet.Pin">Leaflet.Pin</a>
 		</td><td>
 			Enable attaching of markers to other layers during draw or edit features with Leaflet.Draw.
 		</td><td>
 			<a href="https://github.com/kklimczak">Konrad Klimczak</a>
+		</td>
+	</tr>
+        <tr>
+		<td>
+			<a href="https://github.com/tcoupin/leaflet-paintpolygon">L.Control.PaintPolygon</a>
+		</td><td>
+			Draw yours polygons with a circle brush like Paint[brush]. Includes turf.js dependencies.
+		</td><td>
+			<a href="https://github.com/tcoupin">Thibault Coupin</a>
 		</td>
 	</tr>
 </table>
@@ -4056,6 +4084,16 @@ Ease your development integrating Leaflet into a development framework or automa
 			Integrate Leaflet in applications made with the <a href='https://www.polymer-project.org/0.5/'>Polymer 0.5</a> web framework.
 		</td><td>
 			<a href="https://github.com/prtksxna">Prateek Saxena</a>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a href="https://bitbucket.org/terrayazilim/leaflet.jsf">Leaflet.jsf</a>
+		</td><td>
+			Comprehensive Java Server Faces(JSF) Component/Wrapper for Leaflet.
+		</td><td>
+			<a href="http://terrayazilim.com.tr">Terra SI LLC.</a>
+			<a href="https://bitbucket.org/terrayazilim">M.Çağrı Tepebaşılı</a>
 		</td>
 	</tr>
 	<tr>
