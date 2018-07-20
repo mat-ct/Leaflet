@@ -633,7 +633,7 @@ export var GridLayer = Layer.extend({
 		halfSize;
 
 		if (this._map._rotate && this._map._bearing) {
-			halfSize = new L.Bounds([
+			halfSize = new Bounds([
 				map.containerPointToLayerPoint([0, 0]).floor(),
 				map.containerPointToLayerPoint([size.x, 0]).floor(),
 				map.containerPointToLayerPoint([0, size.y]).floor(),
