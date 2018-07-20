@@ -130,7 +130,7 @@ export var Renderer = Layer.extend({
 		    padMax = size.multiplyBy(1 + p),
 		    //// TODO: Somehow refactor this out into map.something() - the code is
 		    ////   pretty much the same as in GridLayer.
-		    clip = new L.Bounds([
+		    clip = new Bounds([
 			    map.containerPointToLayerPoint([padMin.x, padMin.y]).floor(),
 			    map.containerPointToLayerPoint([padMin.x, padMax.y]).floor(),
 			    map.containerPointToLayerPoint([padMax.x, padMin.y]).floor(),
