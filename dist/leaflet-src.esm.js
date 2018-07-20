@@ -1,9 +1,9 @@
 /* @preserve
- * Leaflet 1.3.1+master.ee30c29, a JS library for interactive maps. http://leafletjs.com
+ * Leaflet 1.3.1+master.d4fe026, a JS library for interactive maps. http://leafletjs.com
  * (c) 2010-2018 Vladimir Agafonkin, (c) 2010-2011 CloudMade
  */
 
-var version = "1.3.1+master.ee30c29c";
+var version = "1.3.1+master.d4fe026c";
 
 /*
  * @namespace Util
@@ -2432,7 +2432,7 @@ function setTransform(el, offset, scale, bearing, pivot) {
 				'translate3d(' + pos.x + 'px,' + pos.y + 'px,0)') +
 				(scale ? ' scale(' + scale + ')' : '');
 	} else {
-		el.style[DomUtil.TRANSFORM] =
+		el.style[TRANSFORM] =
 				'translate3d(' + pos.x + 'px,' + pos.y + 'px,0)' +
 				(scale ? ' scale(' + scale + ')' : '') +
 				' rotate(' + bearing + 'rad)';
@@ -2575,7 +2575,7 @@ function getScale(element) {
 }
 
 
-var DomUtil$1 = (Object.freeze || Object)({
+var DomUtil = (Object.freeze || Object)({
 	TRANSFORM: TRANSFORM,
 	TRANSITION: TRANSITION,
 	TRANSITION_END: TRANSITION_END,
@@ -13892,5 +13892,5 @@ Map.TouchZoom = TouchZoom;
 
 Object.freeze = freeze;
 
-export { version, Control, control, Browser, Evented, Mixin, Util, Class, Handler, extend, bind, stamp, setOptions, DomEvent, DomUtil$1 as DomUtil, PosAnimation, Draggable, LineUtil, PolyUtil, Point$1 as Point, toPoint as point, Bounds, toBounds as bounds, Transformation, toTransformation as transformation, index as Projection, LatLng, toLatLng as latLng, LatLngBounds, toLatLngBounds as latLngBounds, CRS, GeoJSON, geoJSON, geoJson, Layer, LayerGroup, layerGroup, FeatureGroup, featureGroup, ImageOverlay, imageOverlay, VideoOverlay, videoOverlay, DivOverlay, Popup, popup, Tooltip, tooltip, Icon, icon, DivIcon, divIcon, Marker, marker, TileLayer, tileLayer, GridLayer, gridLayer, SVG, svg$1 as svg, Renderer, Canvas, canvas$1 as canvas, Path, CircleMarker, circleMarker, Circle, circle, Polyline, polyline, Polygon, polygon, Rectangle, rectangle, Map, createMap as map };
+export { version, Control, control, Browser, Evented, Mixin, Util, Class, Handler, extend, bind, stamp, setOptions, DomEvent, DomUtil, PosAnimation, Draggable, LineUtil, PolyUtil, Point$1 as Point, toPoint as point, Bounds, toBounds as bounds, Transformation, toTransformation as transformation, index as Projection, LatLng, toLatLng as latLng, LatLngBounds, toLatLngBounds as latLngBounds, CRS, GeoJSON, geoJSON, geoJson, Layer, LayerGroup, layerGroup, FeatureGroup, featureGroup, ImageOverlay, imageOverlay, VideoOverlay, videoOverlay, DivOverlay, Popup, popup, Tooltip, tooltip, Icon, icon, DivIcon, divIcon, Marker, marker, TileLayer, tileLayer, GridLayer, gridLayer, SVG, svg$1 as svg, Renderer, Canvas, canvas$1 as canvas, Path, CircleMarker, circleMarker, Circle, circle, Polyline, polyline, Polygon, polygon, Rectangle, rectangle, Map, createMap as map };
 //# sourceMappingURL=leaflet-src.esm.js.map

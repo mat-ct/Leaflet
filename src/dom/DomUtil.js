@@ -215,7 +215,7 @@ export function setTransform(el, offset, scale, bearing, pivot) {
 				'translate3d(' + pos.x + 'px,' + pos.y + 'px,0)') +
 				(scale ? ' scale(' + scale + ')' : '');
 	} else {
-		el.style[DomUtil.TRANSFORM] =
+		el.style[TRANSFORM] =
 				'translate3d(' + pos.x + 'px,' + pos.y + 'px,0)' +
 				(scale ? ' scale(' + scale + ')' : '') +
 				' rotate(' + bearing + 'rad)';

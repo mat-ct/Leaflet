@@ -1,5 +1,5 @@
 /* @preserve
- * Leaflet 1.3.1+master.ee30c29, a JS library for interactive maps. http://leafletjs.com
+ * Leaflet 1.3.1+master.d4fe026, a JS library for interactive maps. http://leafletjs.com
  * (c) 2010-2018 Vladimir Agafonkin, (c) 2010-2011 CloudMade
  */
 
@@ -9,7 +9,7 @@
 	(factory((global.L = {})));
 }(this, (function (exports) { 'use strict';
 
-var version = "1.3.1+master.ee30c29c";
+var version = "1.3.1+master.d4fe026c";
 
 /*
  * @namespace Util
@@ -2438,7 +2438,7 @@ function setTransform(el, offset, scale, bearing, pivot) {
 				'translate3d(' + pos.x + 'px,' + pos.y + 'px,0)') +
 				(scale ? ' scale(' + scale + ')' : '');
 	} else {
-		el.style[DomUtil.TRANSFORM] =
+		el.style[TRANSFORM] =
 				'translate3d(' + pos.x + 'px,' + pos.y + 'px,0)' +
 				(scale ? ' scale(' + scale + ')' : '') +
 				' rotate(' + bearing + 'rad)';
@@ -2581,7 +2581,7 @@ function getScale(element) {
 }
 
 
-var DomUtil$1 = (Object.freeze || Object)({
+var DomUtil = (Object.freeze || Object)({
 	TRANSFORM: TRANSFORM,
 	TRANSITION: TRANSITION,
 	TRANSITION_END: TRANSITION_END,
@@ -13912,7 +13912,7 @@ exports.bind = bind;
 exports.stamp = stamp;
 exports.setOptions = setOptions;
 exports.DomEvent = DomEvent;
-exports.DomUtil = DomUtil$1;
+exports.DomUtil = DomUtil;
 exports.PosAnimation = PosAnimation;
 exports.Draggable = Draggable;
 exports.LineUtil = LineUtil;
