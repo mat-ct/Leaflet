@@ -1,9 +1,9 @@
 /* @preserve
- * Leaflet 1.3.1+master.52bc466, a JS library for interactive maps. http://leafletjs.com
+ * Leaflet 1.3.1+master.8557317, a JS library for interactive maps. http://leafletjs.com
  * (c) 2010-2018 Vladimir Agafonkin, (c) 2010-2011 CloudMade
  */
 
-var version = "1.3.1+master.52bc4665";
+var version = "1.3.1+master.8557317d";
 
 /*
  * @namespace Util
@@ -894,7 +894,7 @@ Point.prototype = {
 		var sinTheta = Math.sin(theta);
 		var cosTheta = Math.cos(theta);
 
-		return new L.Point(
+		return new Point(
 			this.x * cosTheta - this.y * sinTheta,
 			this.x * sinTheta + this.y * cosTheta
 		);
@@ -1374,7 +1374,7 @@ function toLatLngBounds(a, b) {
  * map.panTo(L.latLng(50, 30));
  * ```
  *
- * Note that `LatLng` does not inherit from Leafet's `Class` object,
+ * Note that `LatLng` does not inherit from Leaflet's `Class` object,
  * which means new classes can't inherit from it, and new methods
  * can't be added to it with the `include` function.
  */
@@ -1936,7 +1936,7 @@ var mobileOpera = mobile && opera;
 var mobileGecko = mobile && gecko;
 
 // @property retina: Boolean
-// `true` for browsers on a high-resolution "retina" screen.
+// `true` for browsers on a high-resolution "retina" screen or on any screen when browser's display zoom is more than 100%.
 var retina = (window.devicePixelRatio || (window.screen.deviceXDPI / window.screen.logicalXDPI)) > 1;
 
 
@@ -3679,7 +3679,7 @@ var Map = Evented.extend({
 		var lat = pos.coords.latitude,
 		    lng = pos.coords.longitude,
 		    latlng = new LatLng(lat, lng),
-		    bounds = latlng.toBounds(pos.coords.accuracy),
+		    bounds = latlng.toBounds(pos.coords.accuracy * 2),
 		    options = this._locateOptions;
 
 		if (options.setView) {
@@ -3754,6 +3754,10 @@ var Map = Evented.extend({
 
 		if (this._clearControlPos) {
 			this._clearControlPos();
+		}
+		if (this._resizeRequest) {
+			cancelAnimFrame(this._resizeRequest);
+			this._resizeRequest = null;
 		}
 
 		this._clearHandlers();
@@ -3839,7 +3843,7 @@ var Map = Evented.extend({
 			this.options.maxZoom;
 	},
 
-	// @method getBoundsZoom(bounds: LatLngBounds, inside?: Boolean): Number
+	// @method getBoundsZoom(bounds: LatLngBounds, inside?: Boolean, padding?: Point): Number
 	// Returns the maximum zoom level on which the given bounds fit to the map
 	// view in its entirety. If `inside` (optional) is set to `true`, the method
 	// instead returns the minimum zoom level on which the map view fits into
@@ -4092,7 +4096,7 @@ var Map = Evented.extend({
 		this._bearing = theta * DEG_TO_RAD; // TODO: mod 360
 		this._rotatePanePos = rotatePanePos.rotateFrom(this._bearing, this._pivot);
 
-		L.DomUtil.setPosition(this._rotatePane, this._rotatePanePos, this._bearing, this._rotatePanePos);
+		setPosition(this._rotatePane, this._rotatePanePos, this._bearing, this._rotatePanePos);
 
 		this.fire('rotate');
 	},
@@ -8580,7 +8584,7 @@ var Polygon = Polyline.extend({
 		var inside = false,
 		    part, p1, p2, i, j, k, len, len2;
 
-		if (!this._pxBounds.contains(p)) { return false; }
+		if (!this._pxBounds || !this._pxBounds.contains(p)) { return false; }
 
 		// ray casting algorithm for detecting if point is in polygon
 		for (i = 0, len = this._parts.length; i < len; i++) {
@@ -9007,7 +9011,7 @@ LayerGroup.include({
 // @namespace GeoJSON
 // @factory L.geoJSON(geojson?: Object, options?: GeoJSON options)
 // Creates a GeoJSON layer. Optionally accepts an object in
-// [GeoJSON format](http://geojson.org/geojson-spec.html) to display on the map
+// [GeoJSON format](https://tools.ietf.org/html/rfc7946) to display on the map
 // (you can alternatively add it later with `addData` method) and an `options` object.
 function geoJSON(geojson, options) {
 	return new GeoJSON(geojson, options);
@@ -12172,6 +12176,8 @@ var Canvas = Renderer.extend({
 			this._drawFirst = next;
 		}
 
+		delete this._drawnLayers[layer._leaflet_id];
+
 		delete layer._order;
 
 		delete this._layers[stamp(layer)];
@@ -12196,7 +12202,7 @@ var Canvas = Renderer.extend({
 	},
 
 	_updateDashArray: function (layer) {
-		if (layer.options.dashArray) {
+		if (typeof layer.options.dashArray === 'string') {
 			var parts = layer.options.dashArray.split(','),
 			    dashArray = [],
 			    i;
@@ -12204,6 +12210,8 @@ var Canvas = Renderer.extend({
 				dashArray.push(Number(parts[i]));
 			}
 			layer.options._dashArray = dashArray;
+		} else {
+			layer.options._dashArray = layer.options.dashArray;
 		}
 	},
 

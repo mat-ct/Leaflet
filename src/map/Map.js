@@ -1080,7 +1080,7 @@ export var Map = Evented.extend({
 		this._bearing = theta * DomUtil.DEG_TO_RAD; // TODO: mod 360
 		this._rotatePanePos = rotatePanePos.rotateFrom(this._bearing, this._pivot);
 
-		L.DomUtil.setPosition(this._rotatePane, this._rotatePanePos, this._bearing, this._rotatePanePos);
+		DomUtil.setPosition(this._rotatePane, this._rotatePanePos, this._bearing, this._rotatePanePos);
 
 		this.fire('rotate');
 	},
