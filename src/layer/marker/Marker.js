@@ -4,6 +4,7 @@ import * as Util from '../../core/Util';
 import {toLatLng as latLng} from '../../geo/LatLng';
 import * as DomUtil from '../../dom/DomUtil';
 import {MarkerDrag} from './Marker.Drag';
+import {Point} from '../../geometry/Point';
 
 /*
  * @class Marker

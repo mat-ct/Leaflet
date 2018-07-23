@@ -1,5 +1,5 @@
 /* @preserve
- * Leaflet 1.3.1+master.d4fe026, a JS library for interactive maps. http://leafletjs.com
+ * Leaflet 1.3.1+master.e64958d, a JS library for interactive maps. http://leafletjs.com
  * (c) 2010-2018 Vladimir Agafonkin, (c) 2010-2011 CloudMade
  */
 
@@ -9,7 +9,7 @@
 	(factory((global.L = {})));
 }(this, (function (exports) { 'use strict';
 
-var version = "1.3.1+master.d4fe026c";
+var version = "1.3.1+master.e64958da";
 
 /*
  * @namespace Util
@@ -721,7 +721,7 @@ var Evented = Class.extend(Events);
  * can't be added to it with the `include` function.
  */
 
-function Point$1(x, y, round) {
+function Point(x, y, round) {
 	// @property x: Number; The `x` coordinate of the point
 	this.x = (round ? Math.round(x) : x);
 	// @property y: Number; The `y` coordinate of the point
@@ -732,12 +732,12 @@ var trunc = Math.trunc || function (v) {
 	return v > 0 ? Math.floor(v) : Math.ceil(v);
 };
 
-Point$1.prototype = {
+Point.prototype = {
 
 	// @method clone(): Point
 	// Returns a copy of the current point.
 	clone: function () {
-		return new Point$1(this.x, this.y);
+		return new Point(this.x, this.y);
 	},
 
 	// @method add(otherPoint: Point): Point
@@ -796,14 +796,14 @@ Point$1.prototype = {
 	// [scaling matrix](https://en.wikipedia.org/wiki/Scaling_%28geometry%29#Matrix_representation)
 	// defined by `scale`.
 	scaleBy: function (point) {
-		return new Point$1(this.x * point.x, this.y * point.y);
+		return new Point(this.x * point.x, this.y * point.y);
 	},
 
 	// @method unscaleBy(scale: Point): Point
 	// Inverse of `scaleBy`. Divide each coordinate of the current point by
 	// each coordinate of `scale`.
 	unscaleBy: function (point) {
-		return new Point$1(this.x / point.x, this.y / point.y);
+		return new Point(this.x / point.x, this.y / point.y);
 	},
 
 	// @method round(): Point
@@ -900,7 +900,7 @@ Point$1.prototype = {
 		var sinTheta = Math.sin(theta);
 		var cosTheta = Math.cos(theta);
 
-		return new Point$1(
+		return new Point(
 			this.x * cosTheta - this.y * sinTheta,
 			this.x * sinTheta + this.y * cosTheta
 		);
@@ -923,19 +923,19 @@ Point$1.prototype = {
 // @factory L.point(coords: Object)
 // Expects a plain object of the form `{x: Number, y: Number}` instead.
 function toPoint(x, y, round) {
-	if (x instanceof Point$1) {
+	if (x instanceof Point) {
 		return x;
 	}
 	if (isArray(x)) {
-		return new Point$1(x[0], x[1]);
+		return new Point(x[0], x[1]);
 	}
 	if (x === undefined || x === null) {
 		return x;
 	}
 	if (typeof x === 'object' && 'x' in x && 'y' in x) {
-		return new Point$1(x.x, x.y);
+		return new Point(x.x, x.y);
 	}
-	return new Point$1(x, y, round);
+	return new Point(x, y, round);
 }
 
 /*
@@ -998,7 +998,7 @@ Bounds.prototype = {
 	// @method getCenter(round?: Boolean): Point
 	// Returns the center point of the bounds.
 	getCenter: function (round) {
-		return new Point$1(
+		return new Point(
 		        (this.min.x + this.max.x) / 2,
 		        (this.min.y + this.max.y) / 2, round);
 	},
@@ -1006,13 +1006,13 @@ Bounds.prototype = {
 	// @method getBottomLeft(): Point
 	// Returns the bottom-left point of the bounds.
 	getBottomLeft: function () {
-		return new Point$1(this.min.x, this.max.y);
+		return new Point(this.min.x, this.max.y);
 	},
 
 	// @method getTopRight(): Point
 	// Returns the top-right point of the bounds.
 	getTopRight: function () { // -> Point
-		return new Point$1(this.max.x, this.min.y);
+		return new Point(this.max.x, this.min.y);
 	},
 
 	// @method getTopLeft(): Point
@@ -1041,7 +1041,7 @@ Bounds.prototype = {
 	contains: function (obj) {
 		var min, max;
 
-		if (typeof obj[0] === 'number' || obj instanceof Point$1) {
+		if (typeof obj[0] === 'number' || obj instanceof Point) {
 			obj = toPoint(obj);
 		} else {
 			obj = toBounds(obj);
@@ -1679,7 +1679,7 @@ var SphericalMercator = {
 		    lat = Math.max(Math.min(max, latlng.lat), -max),
 		    sin = Math.sin(lat * d);
 
-		return new Point$1(
+		return new Point(
 			this.R * latlng.lng * d,
 			this.R * Math.log((1 + sin) / (1 - sin)) / 2);
 	},
@@ -1755,7 +1755,7 @@ Transformation.prototype = {
 	// by the given scale. Only accepts actual `L.Point` instances, not arrays.
 	untransform: function (point, scale) {
 		scale = scale || 1;
-		return new Point$1(
+		return new Point(
 		        (point.x / scale - this._b) / this._a,
 		        (point.y / scale - this._d) / this._c);
 	}
@@ -2429,7 +2429,7 @@ function testProp(props) {
 // and optionally scaled by `scale`. Does not have an effect if the
 // browser doesn't support 3D CSS transforms.
 function setTransform(el, offset, scale, bearing, pivot) {
-	var pos = offset || new Point$1(0, 0);
+	var pos = offset || new Point(0, 0);
 
 	if (!bearing) {
 		el.style[TRANSFORM] =
@@ -2471,7 +2471,7 @@ function getPosition(el) {
 	// this method is only used for elements previously positioned using setPosition,
 	// so it's safe to cache the position for performance
 
-	return el._leaflet_pos || new Point$1(0, 0);
+	return el._leaflet_pos || new Point(0, 0);
 }
 
 // Constants for rotation
@@ -2827,13 +2827,13 @@ function stop(e) {
 // `container` (border excluded) or to the whole page if not specified.
 function getMousePosition(e, container) {
 	if (!container) {
-		return new Point$1(e.clientX, e.clientY);
+		return new Point(e.clientX, e.clientY);
 	}
 
 	var scale = getScale(container),
 	    offset = scale.boundingClientRect; // left and top  values are in page scale (like the event clientX/Y)
 
-	return new Point$1(
+	return new Point(
 		// offset.left/top values are in page scale (like clientX/Y),
 		// whereas clientLeft/Top (border width) values are the original values (before CSS scale applies).
 		(e.clientX - offset.left) / scale.x - container.clientLeft,
@@ -3268,7 +3268,7 @@ var Map = Evented.extend({
 	setZoomAround: function (latlng, zoom, options) {
 		var scale = this.getZoomScale(zoom),
 		    viewHalf = this.getSize().divideBy(2),
-		    containerPoint = latlng instanceof Point$1 ? latlng : this.latLngToContainerPoint(latlng),
+		    containerPoint = latlng instanceof Point ? latlng : this.latLngToContainerPoint(latlng),
 
 		    centerOffset = containerPoint.subtract(viewHalf).multiplyBy(1 - 1 / scale),
 		    newCenter = this.containerPointToLatLng(viewHalf.add(centerOffset));
@@ -3884,7 +3884,7 @@ var Map = Evented.extend({
 	// Returns the current size of the map container (in pixels).
 	getSize: function () {
 		if (!this._size || this._sizeChanged) {
-			this._size = new Point$1(
+			this._size = new Point(
 				this._container.clientWidth || 0,
 				this._container.clientHeight || 0);
 
@@ -4169,11 +4169,11 @@ var Map = Evented.extend({
 		// Pane that contains all other map panes
 
 		this._mapPane = this.createPane('mapPane', this._container);
-		setPosition(this._mapPane, new Point$1(0, 0));
+		setPosition(this._mapPane, new Point(0, 0));
 
 		if (this._rotate) {
 			this._rotatePane = this.createPane('rotatePane', this._mapPane);
-			setPosition(this._rotatePane, new Point$1(0, 0), this._bearing, this._pivot);
+			setPosition(this._rotatePane, new Point(0, 0), this._bearing, this._pivot);
 		}
 
 		// @pane tilePane: HTMLElement = 200
@@ -4206,7 +4206,7 @@ var Map = Evented.extend({
 
 	// @section Map state change events
 	_resetView: function (center, zoom) {
-		setPosition(this._mapPane, new Point$1(0, 0));
+		setPosition(this._mapPane, new Point(0, 0));
 
 		var loading = !this._loaded;
 		this._loaded = true;
@@ -4490,11 +4490,11 @@ var Map = Evented.extend({
 	// private methods for getting map state
 
 	_getMapPanePos: function () {
-		return getPosition(this._mapPane) || new Point$1(0, 0);
+		return getPosition(this._mapPane) || new Point(0, 0);
 	},
 
 	_getRotatePanePos: function () {
-		return this._rotatePanePos || new Point$1(0, 0);
+		return this._rotatePanePos || new Point(0, 0);
 	},
 
 	_moved: function () {
@@ -4594,7 +4594,7 @@ var Map = Evented.extend({
 		    dx = this._rebound(minOffset.x, -maxOffset.x),
 		    dy = this._rebound(minOffset.y, -maxOffset.y);
 
-		return new Point$1(dx, dy);
+		return new Point(dx, dy);
 	},
 
 	_rebound: function (left, right) {
@@ -5912,7 +5912,7 @@ var Draggable = Evented.extend({
 		var first = e.touches ? e.touches[0] : e,
 		    sizedParent = getSizedParentNode(this._element);
 
-		this._startPoint = new Point$1(first.clientX, first.clientY);
+		this._startPoint = new Point(first.clientX, first.clientY);
 
 		// Cache the scale, so that we can continuously compensate for it during drag (_onMove).
 		this._parentScale = getScale(sizedParent);
@@ -5935,7 +5935,7 @@ var Draggable = Evented.extend({
 		}
 
 		var first = (e.touches && e.touches.length === 1 ? e.touches[0] : e),
-		    offset = new Point$1(first.clientX, first.clientY)._subtract(this._startPoint);
+		    offset = new Point(first.clientX, first.clientY)._subtract(this._startPoint);
 
 		if (!offset.x && !offset.y) { return; }
 		if (Math.abs(offset.x) + Math.abs(offset.y) < this.options.clickTolerance) { return; }
@@ -6204,7 +6204,7 @@ function _getEdgeIntersection(a, b, code, bounds, round) {
 		y = a.y + dy * (min.x - a.x) / dx;
 	}
 
-	return new Point$1(x, y, round);
+	return new Point(x, y, round);
 }
 
 function _getBitCode(p, bounds) {
@@ -6256,7 +6256,7 @@ function _sqClosestPointOnSegment(p, p1, p2, sqDist) {
 	dx = p.x - x;
 	dy = p.y - y;
 
-	return sqDist ? dx * dx + dy * dy : new Point$1(x, y);
+	return sqDist ? dx * dx + dy * dy : new Point(x, y);
 }
 
 
@@ -6358,7 +6358,7 @@ var PolyUtil = (Object.freeze || Object)({
 
 var LonLat = {
 	project: function (latlng) {
-		return new Point$1(latlng.lng, latlng.lat);
+		return new Point(latlng.lng, latlng.lat);
 	},
 
 	unproject: function (point) {
@@ -6392,7 +6392,7 @@ var Mercator = {
 		var ts = Math.tan(Math.PI / 4 - y / 2) / Math.pow((1 - con) / (1 + con), e / 2);
 		y = -r * Math.log(Math.max(ts, 1E-10));
 
-		return new Point$1(latlng.lng * d * r, y);
+		return new Point(latlng.lng * d * r, y);
 	},
 
 	unproject: function (point) {
@@ -8317,7 +8317,7 @@ var Polyline = Path.extend({
 		this._projectLatlngs(this._latlngs, this._rings, pxBounds);
 
 		var w = this._clickTolerance(),
-		    p = new Point$1(w, w);
+		    p = new Point(w, w);
 
 		if (this._bounds.isValid() && pxBounds.isValid()) {
 			pxBounds.min._subtract(p);
@@ -8558,7 +8558,7 @@ var Polygon = Polyline.extend({
 
 		var bounds = this._renderer._bounds,
 		    w = this.options.weight,
-		    p = new Point$1(w, w);
+		    p = new Point(w, w);
 
 		// increase clip padding by stroke width to avoid stroke on clip edges
 		bounds = new Bounds(bounds.min.subtract(p), bounds.max.add(p));
@@ -9805,7 +9805,7 @@ var Popup = DivOverlay.extend({
 		    marginBottom = parseInt(getStyle(this._container, 'marginBottom'), 10) || 0,
 		    containerHeight = this._container.offsetHeight + marginBottom,
 		    containerWidth = this._containerWidth,
-		    layerPos = new Point$1(this._containerLeft, -containerHeight - this._containerBottom);
+		    layerPos = new Point(this._containerLeft, -containerHeight - this._containerBottom);
 
 		layerPos._add(getPosition(this._container));
 
@@ -10838,7 +10838,7 @@ var GridLayer = Layer.extend({
 	// Normalizes the [tileSize option](#gridlayer-tilesize) into a point. Used by the `createTile()` method.
 	getTileSize: function () {
 		var s = this.options.tileSize;
-		return s instanceof Point$1 ? s : new Point$1(s, s);
+		return s instanceof Point ? s : new Point(s, s);
 	},
 
 	_updateZIndex: function () {
@@ -11038,7 +11038,7 @@ var GridLayer = Layer.extend({
 		var x2 = Math.floor(x / 2),
 		    y2 = Math.floor(y / 2),
 		    z2 = z - 1,
-		    coords2 = new Point$1(+x2, +y2);
+		    coords2 = new Point(+x2, +y2);
 		coords2.z = +z2;
 
 		var key = this._tileCoordsToKey(coords2),
@@ -11064,7 +11064,7 @@ var GridLayer = Layer.extend({
 		for (var i = 2 * x; i < 2 * x + 2; i++) {
 			for (var j = 2 * y; j < 2 * y + 2; j++) {
 
-				var coords = new Point$1(i, j);
+				var coords = new Point(i, j);
 				coords.z = z + 1;
 
 				var key = this._tileCoordsToKey(coords),
@@ -11236,7 +11236,7 @@ var GridLayer = Layer.extend({
 
 		for (var key in this._tiles) {
 			var c = this._tiles[key].coords;
-			if (c.z !== this._tileZoom || !noPruneRange.contains(new Point$1(c.x, c.y))) {
+			if (c.z !== this._tileZoom || !noPruneRange.contains(new Point(c.x, c.y))) {
 				this._tiles[key].current = false;
 			}
 		}
@@ -11248,7 +11248,7 @@ var GridLayer = Layer.extend({
 		// create a queue of coordinates to load tiles from
 		for (var j = tileRange.min.y; j <= tileRange.max.y; j++) {
 			for (var i = tileRange.min.x; i <= tileRange.max.x; i++) {
-				var coords = new Point$1(i, j);
+				var coords = new Point(i, j);
 				coords.z = this._tileZoom;
 
 				if (!this._isValidTile(coords)) { continue; }
@@ -11336,7 +11336,7 @@ var GridLayer = Layer.extend({
 	// converts tile cache key to coordinates
 	_keyToTileCoords: function (key) {
 		var k = key.split(':'),
-		    coords = new Point$1(+k[0], +k[1]);
+		    coords = new Point(+k[0], +k[1]);
 		coords.z = +k[2];
 		return coords;
 	},
@@ -11478,7 +11478,7 @@ var GridLayer = Layer.extend({
 	},
 
 	_wrapCoords: function (coords) {
-		var newCoords = new Point$1(
+		var newCoords = new Point(
 			this._wrapX ? wrapNum(coords.x, this._wrapX) : coords.x,
 			this._wrapY ? wrapNum(coords.y, this._wrapY) : coords.y);
 		newCoords.z = coords.z;
@@ -13681,7 +13681,7 @@ var Tap = Handler.extend({
 		var first = e.touches[0],
 		    el = first.target;
 
-		this._startPos = this._newPos = new Point$1(first.clientX, first.clientY);
+		this._startPos = this._newPos = new Point(first.clientX, first.clientY);
 
 		// if touching a link, highlight it
 		if (el.tagName && el.tagName.toLowerCase() === 'a') {
@@ -13737,7 +13737,7 @@ var Tap = Handler.extend({
 
 	_onMove: function (e) {
 		var first = e.touches[0];
-		this._newPos = new Point$1(first.clientX, first.clientY);
+		this._newPos = new Point(first.clientX, first.clientY);
 		this._simulateEvent('mousemove', first);
 	},
 
@@ -13917,7 +13917,7 @@ exports.PosAnimation = PosAnimation;
 exports.Draggable = Draggable;
 exports.LineUtil = LineUtil;
 exports.PolyUtil = PolyUtil;
-exports.Point = Point$1;
+exports.Point = Point;
 exports.point = toPoint;
 exports.Bounds = Bounds;
 exports.bounds = toBounds;
